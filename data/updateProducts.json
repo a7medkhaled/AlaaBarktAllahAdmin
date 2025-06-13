@@ -1,0 +1,13 @@
+{
+  "product1": {
+    "name": "تفاحة",
+    "pricePerUnit": 1.5,
+    "pricePerPackage": 12,
+    "cost": 0.8,
+    "stockUnits": 0,
+    "packageCount": 90,
+    "category": "بلاستيك",
+    "tags": ["عضوي", "كوبيات"],
+    "image": "assets/apple.jpg"
+  }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>لوحة تحكم المنتجات</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="admin.js" defer></script>
+  </head>
+  <body>
+    <div id="global-loader" style="display: none">
+      <div class="spinner"></div>
+    </div>
+    <h1>لوحة تحكم المنتجات</h1>
+    <section>
+      <h2>تحميل جميع المنتجات من الملف</h2>
+      <button class="json-upload-btn" id="load-from-file-btn">
+        تحميل من products.json
+      </button>
+      <button class="json-upload-btn" id="update-from-file-btn">
+        تحديث المنتجات (إضافة أو زيادة الكمية)
+      </button>
+    </section>
+
+    <section style="display: none">
+      <h2>إضافة / تعديل منتج</h2>
+      <form id="product-form">
+        <input type="text" id="product-id" placeholder="معرف المنتج" required />
+        <input type="text" id="name" placeholder="اسم المنتج" required />
+        <input
+          type="number"
+          id="pricePerUnit"
+          placeholder="السعر للوحدة"
+          required
+        />
+        <input
+          type="number"
+          id="pricePerPackage"
+          placeholder="السعر للعبوة"
+          required
+        />
+        <input type="number" id="cost" placeholder="التكلفة" required />
+        <input
+          type="number"
+          id="stockUnits"
+          placeholder="المخزون بوحدات"
+          required
+        />
+        <input
+          type="number"
+          id="packageCount"
+          placeholder="عدد الوحدات في العبوة"
+          required
+        />
+        <input type="text" id="category" placeholder="الفئة" required />
+        <input type="text" id="tags" placeholder="الوسوم (مفصولة بفاصلة)" />
+        <input type="text" id="image" placeholder="مسار الصورة (assets/...)" />
+        <button type="submit">حفظ المنتج</button>
+      </form>
+    </section>
+    <section>
+      <h2>بحث وتصفية</h2>
+      <input type="text" id="search-input" placeholder="ابحث باسم المنتج..." />
+
+      <div id="category-tags" class="filter-tags"></div>
+      <div id="tag-tags" class="filter-tags"></div>
+    </section>
+
+    <section>
+      <h2>المنتجات الحالية</h2>
+      <div id="product-list" class="product-grid"></div>
+    </section>
+  </body>
+</html>

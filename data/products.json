@@ -1,0 +1,50 @@
+{
+  "product1": {
+    "name": "كوباية الملكه ٩",
+    "pricePerUnit": 1.5,
+    "pricePerPackage": 12,
+    "priceOfPackageForShops": 55,
+    "cost": 0.8,
+    "stockUnits": 500,
+    "packageCount": 8,
+    "category": "بلاستيك",
+    "tags": ["عضوي", "كوبيات"],
+    "image": "assets/apple.jpg"
+  },
+  "product2": {
+    "name": "كوباية الملكه ٨",
+    "pricePerUnit": 1.2,
+    "pricePerPackage": 10,
+    "priceOfPackageForShops": 55,
+    "cost": 0.6,
+    "stockUnits": 80,
+    "packageCount": 6,
+    "category": "بلاستيك",
+    "tags": ["اطباق"],
+    "image": "assets/banana.jpg"
+  },
+  "product3": {
+    "name": "اريال",
+    "pricePerUnit": 1.5,
+    "pricePerPackage": 12,
+    "priceOfPackageForShops": 55,
+    "cost": 0.8,
+    "stockUnits": 500,
+    "packageCount": 8,
+    "category": "منظفات",
+    "tags": ["عضوي", "مناديل"],
+    "image": "assets/apple.jpg"
+  },
+  "product4": {
+    "name": "بامبرز",
+    "pricePerUnit": 1.2,
+    "pricePerPackage": 10,
+    "priceOfPackageForShops": 55,
+    "cost": 0.6,
+    "stockUnits": 80,
+    "packageCount": 6,
+    "category": "منظفات",
+    "tags": ["سائل"],
+    "image": "assets/banana.jpg"
+  }
+}
