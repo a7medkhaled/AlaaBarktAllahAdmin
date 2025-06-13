@@ -15,13 +15,7 @@
     <h1>لوحة تحكم المنتجات</h1>
 
     <section>
-      <h2>تحميل / تحديث المنتجات</h2>
-      <!-- <button class="json-upload-btn" id="load-from-file-btn">
-        تحميل من products.json
-      </button>
-      <button class="json-upload-btn" id="update-from-file-btn">
-        تحديث المنتجات (إضافة أو زيادة الكمية)
-      </button> -->
+      <!-- <h2>تحميل / تحديث المنتجات</h2> -->
 
       <input
         type="file"
@@ -29,16 +23,18 @@
         accept=".json,.csv,.xlsx, .xls"
         style="display: none"
       />
-      <button class="json-upload-btn" id="custom-file-btn">
+      <!-- <button class="json-upload-btn" id="custom-file-btn">
         JSON,xlsx,CSV
-      </button>
+      </button> -->
     </section>
 
     <section>
-      <h2>تصدير البيانات</h2>
-      <button class="json-upload-btn" id="export-json">⬇️ تصدير JSON</button>
-      <button class="json-upload-btn" id="export-csv">⬇️ تصدير CSV</button>
-      <button class="json-upload-btn" id="export-excel">تصدير إكسل</button>
+      <div class="action-buttons">
+        <button id="export-excel">تصدير Excel</button>
+        <button id="export-csv">تصدير CSV</button>
+        <button id="export-json">تصدير JSON</button>
+        <button id="custom-file-btn">رفع ملف .json, .xls</button>
+      </div>
     </section>
 
     <section style="display: none">
@@ -87,7 +83,7 @@
 
     <section>
       <h2>المنتجات الحالية</h2>
-      <div id="product-list" class="product-grid"></div>
+      <ul id="product-list" class="product-grid"></ul>
     </section>
   </body>
 </html>
