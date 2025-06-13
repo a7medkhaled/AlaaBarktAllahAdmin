@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>لوحة تحكم المنتجات</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mini.min.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="admin.js" defer></script>
@@ -12,14 +13,32 @@
       <div class="spinner"></div>
     </div>
     <h1>لوحة تحكم المنتجات</h1>
+
     <section>
-      <h2>تحميل جميع المنتجات من الملف</h2>
-      <button class="json-upload-btn" id="load-from-file-btn">
+      <h2>تحميل / تحديث المنتجات</h2>
+      <!-- <button class="json-upload-btn" id="load-from-file-btn">
         تحميل من products.json
       </button>
       <button class="json-upload-btn" id="update-from-file-btn">
         تحديث المنتجات (إضافة أو زيادة الكمية)
+      </button> -->
+
+      <input
+        type="file"
+        id="file-upload"
+        accept=".json,.csv,.xlsx, .xls"
+        style="display: none"
+      />
+      <button class="json-upload-btn" id="custom-file-btn">
+        JSON,xlsx,CSV
       </button>
+    </section>
+
+    <section>
+      <h2>تصدير البيانات</h2>
+      <button class="json-upload-btn" id="export-json">⬇️ تصدير JSON</button>
+      <button class="json-upload-btn" id="export-csv">⬇️ تصدير CSV</button>
+      <button class="json-upload-btn" id="export-excel">تصدير إكسل</button>
     </section>
 
     <section style="display: none">
@@ -58,10 +77,10 @@
         <button type="submit">حفظ المنتج</button>
       </form>
     </section>
+
     <section>
       <h2>بحث وتصفية</h2>
       <input type="text" id="search-input" placeholder="ابحث باسم المنتج..." />
-
       <div id="category-tags" class="filter-tags"></div>
       <div id="tag-tags" class="filter-tags"></div>
     </section>
