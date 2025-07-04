@@ -5,6 +5,7 @@ import {
   setDoc,
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-latest/package/xlsx.mjs";
+import { isDev } from "./settings.js";
 
 let allProducts = {};
 let filteredProducts = {};
@@ -268,6 +269,10 @@ document.getElementById("export-excel").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (isDev) {
+    document.getElementById("title").textContent =
+      document.getElementById("title").textContent + " DEV";
+  }
   loadProducts();
 
   document
