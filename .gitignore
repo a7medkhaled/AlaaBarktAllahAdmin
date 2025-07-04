@@ -71,3 +71,4 @@ node_modules/
 #firebase config and hosting
 firebase.json
 firebaseKeys.json
+settings.js
