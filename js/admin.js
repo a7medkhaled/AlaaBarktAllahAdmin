@@ -1,4 +1,4 @@
-import { db } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import {
   doc,
   getDoc,
@@ -6,19 +6,49 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-latest/package/xlsx.mjs";
 import { isDev } from "./settings.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { protectRoute } from "./auth-guard.js";
+import { logout } from "./auth.js";
+
+// UI Elements cache
+const elements = {
+  page: document.getElementById("homePage"),
+  userName: document.getElementById("userName"),
+  loader: document.getElementById("global-loader"),
+  categoryTags: document.getElementById("category-tags"),
+  tagTags: document.getElementById("tag-tags"),
+  productList: document.getElementById("product-list"),
+  searchInput: document.getElementById("search-input"),
+  fileUpload: document.getElementById("file-upload"),
+};
 
 let allProducts = {};
 let filteredProducts = {};
 let selectedCategory = "";
 let selectedTag = "";
 
+protectRoute(); // Protect the route
+
+// Auth state observer
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    elements.userName.textContent = user.email;
+    elements.loader.style.display = "none";
+    elements.page.style.display = "block";
+  } else {
+    window.location.href = "login.html";
+  }
+});
+
+// Loader control
 function showLoader() {
-  document.getElementById("global-loader").style.display = "flex";
+  elements.loader.style.display = "flex";
 }
 function hideLoader() {
-  document.getElementById("global-loader").style.display = "none";
+  elements.loader.style.display = "none";
 }
 
+// Load products from Firestore
 async function loadProducts() {
   const docRef = doc(db, "products", "inventory");
   const snap = await getDoc(docRef);
@@ -28,12 +58,13 @@ async function loadProducts() {
   renderProductList();
 }
 
+// Render category filter buttons
 function renderCategoryTags() {
-  const container = document.getElementById("category-tags");
-  container.innerHTML = "";
   const categories = [
     ...new Set(Object.values(allProducts).map((p) => p.category)),
   ];
+  elements.categoryTags.innerHTML = "";
+
   categories.forEach((category) => {
     const btn = document.createElement("button");
     btn.textContent = category;
@@ -45,14 +76,13 @@ function renderCategoryTags() {
       renderTagTags();
       renderProductList();
     };
-    container.appendChild(btn);
+    elements.categoryTags.appendChild(btn);
   });
 }
 
+// Render tag filter buttons based on selected category
 function renderTagTags() {
-  console.log(allProducts);
-  const container = document.getElementById("tag-tags");
-  container.innerHTML = "";
+  elements.tagTags.innerHTML = "";
   if (!selectedCategory) return;
 
   const tags = new Set();
@@ -71,15 +101,15 @@ function renderTagTags() {
       renderTagTags();
       renderProductList();
     };
-    container.appendChild(btn);
+    elements.tagTags.appendChild(btn);
   });
 }
 
+// Render filtered product list
 function renderProductList() {
   filteredProducts = {};
-  const list = document.getElementById("product-list");
-  list.innerHTML = "";
-  const search = document.getElementById("search-input").value.toLowerCase();
+  const search = elements.searchInput.value.toLowerCase();
+  elements.productList.innerHTML = "";
 
   Object.entries(allProducts).forEach(([id, p]) => {
     const matchesSearch = p.name.toLowerCase().includes(search);
@@ -89,6 +119,7 @@ function renderProductList() {
 
     if (matchesSearch && matchesCategory && matchesTag) {
       filteredProducts[id] = p;
+
       const li = document.createElement("li");
       li.innerHTML = `
         <div style="display: flex; gap: 1rem; align-items: center;">
@@ -101,29 +132,28 @@ function renderProductList() {
             <small>الفئة: ${p.category}</small><br>
             <small>السعر للوحدة: ${p.pricePerUnit} | السعر للعبوة: ${
         p.pricePerPackage
-      }      |  السعر للعبوة جملة: ${
-        p.priceOfPackageForShops
-      }</small><br></small><br>
+      } | السعر للعبوة جملة: ${p.priceOfPackageForShops}</small><br>
             <small>التكلفة: ${p.cost}</small><br>
             <small>عدد العبوة: ${p.packageCount} وحدة</small><br>
             <small>الكمية: ${p.stockUnits} وحدة</small><br>
             <small>الوسوم: ${p.tags?.join(", ") || "—"}</small>
           </div>
-        </div>
-      `;
-      list.appendChild(li);
+        </div>`;
+      elements.productList.appendChild(li);
     }
   });
 }
 
+// CSV parsing utility
 function parseCSV(text) {
   const [header, ...lines] = text.trim().split("\n");
   const keys = header.split(",").map((k) => k.trim());
+
   return lines.map((line) => {
     const values = line.split(",").map((v) => v.trim());
     const obj = {};
     keys.forEach((k, i) => (obj[k] = values[i]));
-    obj.tags = obj.tags?.split(",").map((tag) => tag.trim()) || [];
+    obj.tags = obj.tags?.split(",").map((t) => t.trim()) || [];
     obj.pricePerUnit = parseFloat(obj.pricePerUnit);
     obj.pricePerPackage = parseFloat(obj.pricePerPackage);
     obj.cost = parseFloat(obj.cost);
@@ -133,6 +163,7 @@ function parseCSV(text) {
   });
 }
 
+// Export helpers
 function exportToCSV(products) {
   const headers = [
     "id",
@@ -165,12 +196,14 @@ function exportToCSV(products) {
       ].join(",")
     ),
   ].join("\n");
+
   const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
   link.download = "products.csv";
   link.click();
+  URL.revokeObjectURL(url);
 }
 
 function downloadJSON(data, filename = "products.json") {
@@ -182,8 +215,10 @@ function downloadJSON(data, filename = "products.json") {
   a.href = url;
   a.download = filename;
   a.click();
+  URL.revokeObjectURL(url);
 }
 
+// Normalize product data (tags & numbers)
 function normalizeProduct(prod) {
   let tags = [];
   if (Array.isArray(prod.tags)) {
@@ -206,13 +241,15 @@ function normalizeProduct(prod) {
   };
 }
 
+// Validate mandatory fields
 function validateProduct(prod, id) {
   if (!prod.name || !prod.category) {
     throw new Error(`المنتج "${id}" مفقود فيه الاسم أو الفئة`);
   }
 }
+
+// Export products to Excel using XLSX
 function exportToExcel(products, filename = "products.xlsx") {
-  // Prepare data array with header row
   const headers = [
     "id",
     "name",
@@ -244,40 +281,41 @@ function exportToExcel(products, filename = "products.xlsx") {
     ]),
   ];
 
-  // Create worksheet from data
   const worksheet = XLSX.utils.aoa_to_sheet(data);
-
-  // Create workbook and append the worksheet
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
 
-  // Write workbook to binary string
   const wbout = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-
-  // Create a Blob and download
   const blob = new Blob([wbout], { type: "application/octet-stream" });
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
   a.href = url;
   a.download = filename;
   a.click();
+
   URL.revokeObjectURL(url);
 }
 
+// Event bindings
 document.getElementById("export-excel").addEventListener("click", () => {
   exportToExcel(filteredProducts);
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   if (isDev) {
-    document.getElementById("title").textContent =
-      document.getElementById("title").textContent + " DEV";
+    const titleEl = document.getElementById("title");
+    titleEl.textContent = `${titleEl.textContent} DEV`;
   }
+
   loadProducts();
 
-  document
-    .getElementById("search-input")
-    .addEventListener("input", renderProductList);
+  document.getElementById("logout").addEventListener("click", async () => {
+    await logout();
+    window.location.href = "/login.html";
+  });
+
+  elements.searchInput.addEventListener("input", renderProductList);
 
   document.getElementById("export-json").addEventListener("click", () => {
     downloadJSON(filteredProducts);
@@ -288,74 +326,72 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("custom-file-btn").addEventListener("click", () => {
-    document.getElementById("file-upload").click();
+    elements.fileUpload.click();
   });
 
-  document
-    .getElementById("file-upload")
-    .addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      showLoader();
+  elements.fileUpload.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-      try {
-        const newProducts = {};
+    showLoader();
 
-        if (file.name.endsWith(".csv")) {
-          const text = await file.text();
-          const parsed = parseCSV(text);
-          parsed.forEach(([id, prod]) => {
-            newProducts[id] = normalizeProduct(prod);
-          });
-        } else if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
-          const data = await file.arrayBuffer();
-          const workbook = XLSX.read(data, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
-          const rows = XLSX.utils.sheet_to_json(sheet);
+    try {
+      const newProducts = {};
 
-          rows.forEach((row) => {
-            const { id, ...prod } = row;
-            if (id) {
-              newProducts[id] = normalizeProduct(prod);
-            }
-          });
-        } else {
-          const text = await file.text();
-          const parsed = JSON.parse(text);
-          Object.entries(parsed).forEach(([id, prod]) => {
-            newProducts[id] = normalizeProduct(prod);
-          });
-        }
-
-        const docRef = doc(db, "products", "inventory");
-        const snap = await getDoc(docRef);
-        const existingProducts = snap.exists() ? snap.data().products : {};
-
-        Object.entries(newProducts).forEach(([id, prod]) => {
-          validateProduct(prod, id);
-          if (existingProducts[id]) {
-            existingProducts[id].stockUnits =
-              (existingProducts[id].stockUnits || 0) + (prod.stockUnits || 0);
-            existingProducts[id] = {
-              ...existingProducts[id],
-              ...prod,
-              stockUnits: existingProducts[id].stockUnits,
-            };
-          } else {
-            existingProducts[id] = prod;
-          }
+      if (file.name.endsWith(".csv")) {
+        const text = await file.text();
+        const parsed = parseCSV(text);
+        parsed.forEach(([id, prod]) => {
+          newProducts[id] = normalizeProduct(prod);
         });
+      } else if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet);
 
-        await setDoc(docRef, { products: existingProducts });
-
-        alert("✅ تم رفع وتحديث المنتجات بنجاح");
-        await loadProducts();
-      } catch (err) {
-        console.error(err);
-        alert("❌ حدث خطأ في قراءة الملف: " + err.message);
-      } finally {
-        hideLoader();
+        rows.forEach((row) => {
+          const { id, ...prod } = row;
+          if (id) newProducts[id] = normalizeProduct(prod);
+        });
+      } else {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        Object.entries(parsed).forEach(([id, prod]) => {
+          newProducts[id] = normalizeProduct(prod);
+        });
       }
-    });
+
+      const docRef = doc(db, "products", "inventory");
+      const snap = await getDoc(docRef);
+      const existingProducts = snap.exists() ? snap.data().products : {};
+
+      Object.entries(newProducts).forEach(([id, prod]) => {
+        validateProduct(prod, id);
+
+        if (existingProducts[id]) {
+          existingProducts[id].stockUnits =
+            (existingProducts[id].stockUnits || 0) + (prod.stockUnits || 0);
+          existingProducts[id] = {
+            ...existingProducts[id],
+            ...prod,
+            stockUnits: existingProducts[id].stockUnits,
+          };
+        } else {
+          existingProducts[id] = prod;
+        }
+      });
+
+      await setDoc(docRef, { products: existingProducts });
+
+      alert("✅ تم رفع وتحديث المنتجات بنجاح");
+      await loadProducts();
+    } catch (err) {
+      console.error(err);
+      alert("❌ حدث خطأ في قراءة الملف: " + err.message);
+    } finally {
+      hideLoader();
+    }
+  });
 });

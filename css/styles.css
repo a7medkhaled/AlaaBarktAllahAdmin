@@ -1,3 +1,4 @@
+/* ====== Global Styles ====== */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   direction: rtl;
@@ -16,37 +17,96 @@ h2 {
   margin-bottom: 1rem;
 }
 
-form {
-  background-color: #fff;
-  padding: 1.25rem;
+/* ====== Typography & Forms ====== */
+#search-input {
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: 2px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
-}
-
-form input,
-form button {
   width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
   box-sizing: border-box;
+  margin: 1rem 0;
 }
 
-form button {
+#search-input:focus {
+  outline: none;
+  border-color: #27ae60;
+  box-shadow: 0 0 5px rgba(39, 174, 96, 0.5);
+}
+
+/* ====== Buttons ====== */
+button,
+.action-buttons button,
+.json-upload-btn,
+.filter-tags button,
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+button,
+.action-buttons button {
+  padding: 8px 12px;
+  background: #28a745;
+  color: white;
+  font-size: 0.85rem;
+}
+
+button:hover,
+.action-buttons button:hover {
+  background: #218838;
+}
+
+.json-upload-btn {
+  display: block;
+  width: 100%;
   background-color: #27ae60;
   color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 1rem;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
 }
 
-form button:hover {
+.json-upload-btn:hover {
   background-color: #219150;
 }
 
+/* ====== Action Buttons ====== */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  margin: 1rem 0;
+}
+
+/* ====== Filter Tags ====== */
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  justify-content: flex-start;
+}
+
+.filter-tags button {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background-color: #ecf0f1;
+  color: black;
+  white-space: nowrap;
+  font-size: medium;
+}
+
+.filter-tags button.active {
+  background-color: #27ae60;
+  color: white;
+}
+
+/* ====== Product List & Grid ====== */
 #product-list {
   list-style: none;
   padding: 0;
@@ -70,48 +130,6 @@ form button:hover {
     align-items: center;
     justify-content: space-between;
   }
-}
-
-.json-upload-btn {
-  display: block;
-  width: 100%;
-  background-color: #27ae60;
-  color: white;
-  border: none;
-  padding: 1rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 0.5rem 0;
-}
-
-.json-upload-btn:hover {
-  background-color: #219150;
-}
-
-.filter-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
-  justify-content: flex-start;
-}
-
-.filter-tags button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 20px;
-  background-color: #ecf0f1;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  white-space: nowrap;
-}
-
-.filter-tags button.active {
-  background-color: #27ae60;
-  color: white;
 }
 
 .product-grid {
@@ -149,6 +167,7 @@ form button:hover {
   margin-bottom: 0.5rem;
 }
 
+/* ====== Loader ====== */
 #global-loader {
   position: fixed;
   inset: 0;
@@ -177,40 +196,35 @@ form button:hover {
   }
 }
 
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: flex-start;
-  margin: 1rem 0;
+/* ====== Authentication/Login ====== */
+.auth-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.action-buttons button {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
-  border: none;
-  background-color: #27ae60;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.action-buttons button:hover {
-  background-color: #219150;
-}
-
-#search-input {
-  padding: 1rem;
-  font-size: 1.1rem;
-  border: 2px solid #ccc;
-  border-radius: 8px;
+.input {
+  display: block;
   width: 100%;
-  box-sizing: border-box;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
 }
-#search-input:focus {
-  outline: none;
-  border-color: #27ae60;
-  box-shadow: 0 0 5px rgba(39, 174, 96, 0.5);
+
+.btn.google {
+  background: #db4437;
+  color: white;
+}
+
+.btn.logout {
+  background: #666;
+  color: white;
+}
+
+.user-info {
+  margin-top: 1rem;
+  font-style: italic;
 }
