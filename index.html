@@ -3,87 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <title>لوحة تحكم المنتجات</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <!-- External Libraries -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mini.min.js"></script>
-    <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="firebase-config.js"></script>
-    <script type="module" src="admin.js" defer></script>
+
+    <!-- App Scripts -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/admin.js" defer></script>
   </head>
   <body>
-    <div id="global-loader" style="display: none">
+    <!-- Global Loader -->
+    <div id="global-loader" style="display: flex">
       <div class="spinner"></div>
     </div>
-    <h1 id="title">لوحة تحكم المنتجات</h1>
 
-    <section>
-      <!-- <h2>تحميل / تحديث المنتجات</h2> -->
-
-      <input
-        type="file"
-        id="file-upload"
-        accept=".json,.csv,.xlsx, .xls"
-        style="display: none"
-      />
-      <!-- <button class="json-upload-btn" id="custom-file-btn">
-        JSON,xlsx,CSV
-      </button> -->
-    </section>
-
-    <section>
-      <div class="action-buttons">
-        <button id="export-excel">تصدير Excel</button>
-        <button id="export-csv">تصدير CSV</button>
-        <button id="export-json">تصدير JSON</button>
-        <button id="custom-file-btn">رفع ملف .json, .xls</button>
+    <!-- Header -->
+    <header style="display: flex; align-items: center">
+      <div style="flex: 1">
+        <ul>
+          <li>
+            <a href="">Home </a>
+          </li>
+          <li><a href="./sales.html">sales </a></li>
+        </ul>
       </div>
-    </section>
+      <h1 id="title" style="flex: 1; text-align: center">لوحة تحكم المنتجات</h1>
+      <div
+        class="action-buttons"
+        style="flex: 1; display: flex; justify-content: flex-end"
+      >
+        <button id="logout">تسجيل الخروج</button>
+        <p id="userName"></p>
+      </div>
+    </header>
 
-    <section style="display: none">
-      <h2>إضافة / تعديل منتج</h2>
-      <form id="product-form">
-        <input type="text" id="product-id" placeholder="معرف المنتج" required />
-        <input type="text" id="name" placeholder="اسم المنتج" required />
+    <!-- Main Content -->
+    <main id="homePage" style="display: none">
+      <!-- Upload Section -->
+      <section>
         <input
-          type="number"
-          id="pricePerUnit"
-          placeholder="السعر للوحدة"
-          required
+          type="file"
+          id="file-upload"
+          accept=".json,.csv,.xlsx,.xls"
+          style="display: none"
         />
-        <input
-          type="number"
-          id="pricePerPackage"
-          placeholder="السعر للعبوة"
-          required
-        />
-        <input type="number" id="cost" placeholder="التكلفة" required />
-        <input
-          type="number"
-          id="stockUnits"
-          placeholder="المخزون بوحدات"
-          required
-        />
-        <input
-          type="number"
-          id="packageCount"
-          placeholder="عدد الوحدات في العبوة"
-          required
-        />
-        <input type="text" id="category" placeholder="الفئة" required />
-        <input type="text" id="tags" placeholder="الوسوم (مفصولة بفاصلة)" />
-        <input type="text" id="image" placeholder="مسار الصورة (assets/...)" />
-        <button type="submit">حفظ المنتج</button>
-      </form>
-    </section>
+      </section>
 
-    <section>
-      <h2>بحث وتصفية</h2>
-      <input type="text" id="search-input" placeholder="ابحث باسم المنتج..." />
-      <div id="category-tags" class="filter-tags"></div>
-      <div id="tag-tags" class="filter-tags"></div>
-    </section>
+      <!-- Export/Import Buttons -->
+      <section>
+        <div class="action-buttons">
+          <button id="export-excel">تصدير Excel</button>
+          <button id="export-csv">تصدير CSV</button>
+          <button id="export-json">تصدير JSON</button>
+          <button id="custom-file-btn">رفع ملف .json, .xls</button>
+        </div>
+      </section>
 
-    <section>
-      <h2>المنتجات الحالية</h2>
-      <ul id="product-list" class="product-grid"></ul>
-    </section>
+      <!-- Product Form (Hidden by Default) -->
+      <section style="display: none">
+        <h2>إضافة / تعديل منتج</h2>
+        <form id="product-form">
+          <input
+            type="text"
+            id="product-id"
+            placeholder="معرف المنتج"
+            required
+          />
+          <input type="text" id="name" placeholder="اسم المنتج" required />
+          <input
+            type="number"
+            id="pricePerUnit"
+            placeholder="السعر للوحدة"
+            required
+          />
+          <input
+            type="number"
+            id="pricePerPackage"
+            placeholder="السعر للعبوة"
+            required
+          />
+          <input type="number" id="cost" placeholder="التكلفة" required />
+          <input
+            type="number"
+            id="stockUnits"
+            placeholder="المخزون بوحدات"
+            required
+          />
+          <input
+            type="number"
+            id="packageCount"
+            placeholder="عدد الوحدات في العبوة"
+            required
+          />
+          <input type="text" id="category" placeholder="الفئة" required />
+          <input type="text" id="tags" placeholder="الوسوم (مفصولة بفاصلة)" />
+          <input
+            type="text"
+            id="image"
+            placeholder="مسار الصورة (assets/...)"
+          />
+          <button type="submit">حفظ المنتج</button>
+        </form>
+      </section>
+
+      <!-- Search and Filter -->
+      <section>
+        <h2>بحث وتصفية</h2>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="ابحث باسم المنتج..."
+        />
+        <div id="category-tags" class="filter-tags"></div>
+        <div id="tag-tags" class="filter-tags"></div>
+      </section>
+
+      <!-- Product List -->
+      <section>
+        <h2>المنتجات الحالية</h2>
+        <ul id="product-list" class="product-grid"></ul>
+      </section>
+    </main>
   </body>
 </html>
