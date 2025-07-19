@@ -5,7 +5,7 @@ import {
   setDoc,
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-latest/package/xlsx.mjs";
-import { isDev } from "./settings.js";
+import { isDev } from "../settings.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { protectRoute } from "./auth-guard.js";
 import { logout } from "./auth.js";
@@ -53,6 +53,7 @@ async function loadProducts() {
   const docRef = doc(db, "products", "inventory");
   const snap = await getDoc(docRef);
   allProducts = snap.exists() ? snap.data().products : {};
+  console.log(JSON.stringify(allProducts));
   renderCategoryTags();
   renderTagTags();
   renderProductList();

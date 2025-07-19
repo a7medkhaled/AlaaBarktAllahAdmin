@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>تقرير المبيعات</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mini.min.js"></script>
+
+    <!-- Firebase Modules -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/sales.js" defer></script>
+  </head>
+  <body>
+    <header style="display: flex; align-items: center">
+      <div style="flex: 1">
+        <ul>
+          <li><a href="./index.html">الرئيسية</a></li>
+        </ul>
+      </div>
+      <h1 style="flex: 1; text-align: center">تقرير المبيعات اليومية</h1>
+      <div style="flex: 1; text-align: end">
+        <button id="langToggle">🇺🇸 English</button>
+      </div>
+    </header>
+
+    <main style="padding: 1rem">
+      <label for="startDateFilter">اختر تاريخ البداية:</label>
+      <input type="date" id="startDateFilter" />
+
+      <label for="endDateFilter" style="margin-left: 1rem"
+        >اختر تاريخ النهاية:</label
+      >
+      <input type="date" id="endDateFilter" />
+
+      <button id="exportBtn">📁 تصدير</button>
+
+      <h2>إجمالي اليوم</h2>
+      <p>المبيعات: <span id="totalSales">0</span></p>
+      <p>المرتجعات: <span id="totalReturns">0</span></p>
+      <p>الإيرادات: <span id="totalRevenue">0</span></p>
+      <p>التكلفة الكلية: <span id="totalCost">0</span></p>
+      <p>الأرباح: <span id="totalProfit">0</span></p>
+
+      <h2>المعاملات</h2>
+      <table border="1" style="width: 100%; text-align: center">
+        <thead>
+          <tr>
+            <th>النوع</th>
+            <th>التاريخ</th>
+            <th>المنتجات</th>
+            <th>الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody id="reportTableBody"></tbody>
+      </table>
+
+      <h2>تفصيل حسب المنتج</h2>
+      <table border="1" style="width: 100%; text-align: center">
+        <thead>
+          <tr>
+            <th>المنتج</th>
+            <th>مباع</th>
+            <th>مرتجع</th>
+            <th>الإيراد</th>
+            <th>التكلفة</th>
+            <th>الربح</th>
+          </tr>
+        </thead>
+        <tbody id="productBreakdownBody"></tbody>
+      </table>
+    </main>
+  </body>
+</html>

@@ -39,24 +39,24 @@ button,
 .action-buttons button,
 .json-upload-btn,
 .filter-tags button,
-.btn {
+.btn,
+.action-btn {
   cursor: pointer;
   border: none;
   border-radius: 6px;
   transition: background-color 0.3s ease;
   font-weight: bold;
-}
-
-button,
-.action-buttons button {
   padding: 8px 12px;
   background: #28a745;
   color: white;
   font-size: 0.85rem;
+  text-decoration: none;
+  display: inline-block;
 }
 
 button:hover,
-.action-buttons button:hover {
+.action-buttons button:hover,
+.action-btn:hover {
   background: #218838;
 }
 
@@ -228,3 +228,76 @@ button:hover,
   margin-top: 1rem;
   font-style: italic;
 }
+
+/* ====== Home/Dashboard ====== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2c3e50;
+  padding: 0.75rem 1rem;
+  color: white;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  display: inline;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+.hero {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.hero h2 {
+  margin-bottom: 1rem;
+  color: #27ae60;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 600px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: white;
+  paddi
