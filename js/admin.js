@@ -113,13 +113,15 @@ function renderProductList() {
   elements.productList.innerHTML = "";
 
   Object.entries(allProducts).forEach(([id, p]) => {
-    const matchesSearch = p.name.toLowerCase().includes(search);
+    const name = String(p.name || "").toLowerCase();
+    const matchesSearch = name.includes(search);
     const matchesCategory =
       !selectedCategory || p.category === selectedCategory;
     const matchesTag = !selectedTag || (p.tags && p.tags.includes(selectedTag));
 
     if (matchesSearch && matchesCategory && matchesTag) {
       filteredProducts[id] = p;
+      const showPackagePrice = p.packageCount !== 1;
 
       const li = document.createElement("li");
       li.innerHTML = `
@@ -130,12 +132,12 @@ function renderProductList() {
           <div>
             <strong>${p.name}</strong><br>
             <small>المعرف: ${id}</small><br>
+            <small>اسم الشركة: ${p.companyName || "—"}</small><br>
             <small>الفئة: ${p.category}</small><br>
-            <small>السعر للوحدة: ${p.pricePerUnit} | السعر للعبوة: ${
-        p.pricePerPackage
-      } | السعر للعبوة جملة: ${p.priceOfPackageForShops}</small><br>
+            <small>السعر للوحدة: ${p.pricePerUnit} | السعر للوحدة جملة: ${p.pricePerUnitForShops}</small><br>
+            ${showPackagePrice ? `<small>السعر للعبوة: ${p.pricePerPackage} | السعر للعبوة جملة: ${p.priceOfPackageForShops}</small><br>` : ""}
             <small>التكلفة: ${p.cost}</small><br>
-            <small>عدد العبوة: ${p.packageCount} وحدة</small><br>
+            ${showPackagePrice ? `<small>عدد العبوة: ${p.packageCount} وحدة</small><br>` : ""}
             <small>الكمية: ${p.stockUnits} وحدة</small><br>
             <small>الوسوم: ${p.tags?.join(", ") || "—"}</small>
           </div>
@@ -156,10 +158,12 @@ function parseCSV(text) {
     keys.forEach((k, i) => (obj[k] = values[i]));
     obj.tags = obj.tags?.split(",").map((t) => t.trim()) || [];
     obj.pricePerUnit = parseFloat(obj.pricePerUnit);
+    obj.pricePerUnitForShops = parseFloat(obj.pricePerUnitForShops);
     obj.pricePerPackage = parseFloat(obj.pricePerPackage);
     obj.cost = parseFloat(obj.cost);
     obj.packageCount = parseInt(obj.packageCount);
     obj.stockUnits = parseInt(obj.stockUnits);
+    obj.companyName = obj.companyName?.trim();
     return [obj.id || obj.name, obj];
   });
 }
@@ -169,7 +173,9 @@ function exportToCSV(products) {
   const headers = [
     "id",
     "name",
+    "companyName",
     "pricePerUnit",
+    "pricePerUnitForShops",
     "pricePerPackage",
     "priceOfPackageForShops",
     "cost",
@@ -185,7 +191,9 @@ function exportToCSV(products) {
       [
         id,
         p.name,
+        p.companyName || "",
         p.pricePerUnit,
+        p.pricePerUnitForShops,
         p.pricePerPackage,
         p.priceOfPackageForShops,
         p.cost,
@@ -233,7 +241,9 @@ function normalizeProduct(prod) {
 
   return {
     ...prod,
+    companyName: prod.companyName?.trim() || "",
     pricePerUnit: parseFloat(prod.pricePerUnit) || 0,
+    pricePerUnitForShops: parseFloat(prod.pricePerUnitForShops) || 0,
     pricePerPackage: parseFloat(prod.pricePerPackage) || 0,
     cost: parseFloat(prod.cost) || 0,
     packageCount: parseInt(prod.packageCount) || 0,
@@ -254,7 +264,9 @@ function exportToExcel(products, filename = "products.xlsx") {
   const headers = [
     "id",
     "name",
+    "companyName",
     "pricePerUnit",
+    "pricePerUnitForShops",
     "pricePerPackage",
     "priceOfPackageForShops",
     "cost",
@@ -270,7 +282,9 @@ function exportToExcel(products, filename = "products.xlsx") {
     ...Object.entries(products).map(([id, p]) => [
       id,
       p.name,
+      p.companyName || "",
       p.pricePerUnit,
+      p.pricePerUnitForShops,
       p.pricePerPackage,
       p.priceOfPackageForShops,
       p.cost,
@@ -370,6 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       Object.entries(newProducts).forEach(([id, prod]) => {
         validateProduct(prod, id);
+        console.log(JSON.stringify(prod));
 
         if (existingProducts[id]) {
           existingProducts[id].stockUnits =
@@ -381,6 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
           };
         } else {
           existingProducts[id] = prod;
+         
         }
       });
 
