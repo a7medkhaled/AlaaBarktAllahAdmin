@@ -11,63 +11,110 @@
     <script type="module" src="js/sales.js" defer></script>
   </head>
   <body>
-    <header style="display: flex; align-items: center">
-      <div style="flex: 1">
-        <ul>
+    <header class="topbar" style="flex-wrap: wrap;">
+      <div class="nav-group" style="display: flex; align-items: center;">
+        <ul class="nav-links" style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 0; padding: 0; list-style: none;">
           <li><a href="./index.html">الرئيسية</a></li>
+          <li><a href="./customers.html">العملاء</a></li>
         </ul>
       </div>
-      <h1 style="flex: 1; text-align: center">تقرير المبيعات اليومية</h1>
-      <div style="flex: 1; text-align: end">
-        <button id="langToggle">🇺🇸 English</button>
+
+      <h1 class="page-title" style="margin: 0;">تقرير المبيعات اليومية</h1>
+
+      <div class="user-block" style="display: flex; align-items: center; justify-content: flex-end;">
+        <button id="langToggle" class="logout-btn">🇺🇸 English</button>
       </div>
     </header>
 
-    <main style="padding: 1rem">
-      <label for="startDateFilter">اختر تاريخ البداية:</label>
-      <input type="date" id="startDateFilter" />
+    <main class="sales-page" style="padding: 1rem">
+      <div class="sales-controls">
+        <div class="date-field">
+          <label for="startDateFilter">اختر تاريخ البداية:</label>
+          <input type="date" id="startDateFilter" />
+        </div>
 
-      <label for="endDateFilter" style="margin-left: 1rem"
-        >اختر تاريخ النهاية:</label
-      >
-      <input type="date" id="endDateFilter" />
+        <div class="date-field">
+          <label for="endDateFilter">اختر تاريخ النهاية:</label>
+          <input type="date" id="endDateFilter" />
+        </div>
 
-      <button id="exportBtn">📁 تصدير</button>
+        <button id="exportBtn" class="export-btn">📁 تصدير</button>
+      </div>
 
-      <h2>إجمالي اليوم</h2>
-      <p>المبيعات: <span id="totalSales">0</span></p>
-      <p>المرتجعات: <span id="totalReturns">0</span></p>
-      <p>الإيرادات: <span id="totalRevenue">0</span></p>
-      <p>التكلفة الكلية: <span id="totalCost">0</span></p>
-      <p>الأرباح: <span id="totalProfit">0</span></p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">المبيعات</span>
+          <strong id="totalSales">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">المرتجعات</span>
+          <strong id="totalReturns">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">الإيراد</span>
+          <strong id="totalRevenue">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">التكلفة</span>
+          <strong id="totalCost">0</strong>
+        </div>
+        <div class="stat-card highlight">
+          <span class="stat-label">الربح</span>
+          <strong id="totalProfit">0</strong>
+        </div>
+        <div class="stat-card soft">
+          <span class="stat-label">عدد المعاملات</span>
+          <strong id="transactionsCount">0</strong>
+        </div>
+        <div class="stat-card soft">
+          <span class="stat-label">عدد العناصر</span>
+          <strong id="itemsSoldCount">0</strong>
+        </div>
+        <div class="stat-card soft">
+          <span class="stat-label">متوسط الطلب</span>
+          <strong id="avgOrderValue">0</strong>
+        </div>
+      </div>
 
-      <h2>المعاملات</h2>
-      <table border="1" style="width: 100%; text-align: center">
-        <thead>
-          <tr>
-            <th>النوع</th>
-            <th>التاريخ</th>
-            <th>المنتجات</th>
-            <th>الإجمالي</th>
-          </tr>
-        </thead>
-        <tbody id="reportTableBody"></tbody>
-      </table>
+      <div class="panel">
+        <h2>المعاملات</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>النوع</th>
+                <th>التاريخ</th>
+                <th>العميل</th>
+                <th>المستخدم</th>
+                <th>المنتجات</th>
+                <th>عدد العناصر</th>
+                <th>الإجمالي</th>
+              </tr>
+            </thead>
+            <tbody id="reportTableBody"></tbody>
+          </table>
+        </div>
+      </div>
 
-      <h2>تفصيل حسب المنتج</h2>
-      <table border="1" style="width: 100%; text-align: center">
-        <thead>
-          <tr>
-            <th>المنتج</th>
-            <th>مباع</th>
-            <th>مرتجع</th>
-            <th>الإيراد</th>
-            <th>التكلفة</th>
-            <th>الربح</th>
-          </tr>
-        </thead>
-        <tbody id="productBreakdownBody"></tbody>
-      </table>
+      <div class="panel">
+        <h2>تفصيل حسب المنتج</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>المنتج</th>
+                <th>مباع</th>
+                <th>مرتجع</th>
+                <th>إجمالي الوحدات</th>
+                <th>الإيراد</th>
+                <th>التكلفة</th>
+                <th>الربح</th>
+              </tr>
+            </thead>
+            <tbody id="productBreakdownBody"></tbody>
+          </table>
+        </div>
+      </div>
     </main>
   </body>
 </html>

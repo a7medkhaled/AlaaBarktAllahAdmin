@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>العملاء</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/customers.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="nav-group">
+        <ul class="nav-links">
+          <li><a href="./index.html">الرئيسية</a></li>
+          <li><a href="./sales.html">المبيعات</a></li>
+          <li><a href="./customers.html">العملاء</a></li>
+        </ul>
+      </div>
+
+      <h1 class="page-title">العملاء</h1>
+
+      <div class="user-block">
+        <a href="./index.html" class="logout-btn" style="text-decoration: none;">عودة</a>
+      </div>
+    </header>
+
+    <main class="customers-page">
+      <section class="panel customer-selector-panel">
+        <h2>اختر العميل</h2>
+        <label for="customerSelect" class="sr-only">العميل</label>
+        <select id="customerSelect">
+          <option value="">اختر عميلًا</option>
+        </select>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">إجمالي المشتريات</span>
+          <strong id="customerTotalSpent">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">عدد الطلبات</span>
+          <strong id="customerOrderCount">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">عدد العناصر</span>
+          <strong id="customerItemsCount">0</strong>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>المنتجات التي اشتراها العميل</h2>
+        <ul id="customerProductsList" class="customer-products-list"></ul>
+      </section>
+    </main>
+  </body>
+</html>

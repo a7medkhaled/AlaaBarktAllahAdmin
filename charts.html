@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>الرسوم البيانية</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/charts.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="nav-group">
+        <ul class="nav-links">
+          <li><a href="./index.html">الرئيسية</a></li>
+          <li class="nav-menu">
+            <a href="#">التقارير</a>
+            <div class="subnav">
+              <a href="./sales.html">المبيعات</a>
+              <a href="./charts.html">الرسوم البيانية</a>
+            </div>
+          </li>
+          <li><a href="./customers.html">العملاء</a></li>
+        </ul>
+      </div>
+
+      <h1 class="page-title">الرسوم البيانية</h1>
+
+      <div class="user-block">
+        <a href="./index.html" class="logout-btn" style="text-decoration: none;">عودة</a>
+      </div>
+    </header>
+
+    <main class="dashboard-shell charts-page">
+      <section class="panel">
+        <div class="sales-controls" style="margin-bottom: 1rem;">
+          <div class="date-field">
+            <label for="startDateFilter">من:</label>
+            <input type="date" id="startDateFilter" />
+          </div>
+
+          <div class="date-field">
+            <label for="endDateFilter">إلى:</label>
+            <input type="date" id="endDateFilter" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>إيرادات اليوم</h2>
+        <canvas id="dailyChart"></canvas>
+      </section>
+
+      <section class="panel">
+        <h2>أفضل المنتجات</h2>
+        <canvas id="productChart"></canvas>
+      </section>
+    </main>
+  </body>
+</html>

@@ -124,24 +124,44 @@ function renderProductList() {
       const showPackagePrice = p.packageCount !== 1;
 
       const li = document.createElement("li");
-      li.innerHTML = `
-        <div style="display: flex; gap: 1rem; align-items: center;">
-          <img src="${p.image}" alt="${
-        p.name
-      }" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
-          <div>
-            <strong>${p.name}</strong><br>
-            <small>المعرف: ${id}</small><br>
-            <small>اسم الشركة: ${p.companyName || "—"}</small><br>
-            <small>الفئة: ${p.category}</small><br>
-            <small>السعر للوحدة: ${p.pricePerUnit} | السعر للوحدة جملة: ${p.pricePerUnitForShops}</small><br>
-            ${showPackagePrice ? `<small>السعر للعبوة: ${p.pricePerPackage} | السعر للعبوة جملة: ${p.priceOfPackageForShops}</small><br>` : ""}
-            <small>التكلفة: ${p.cost}</small><br>
-            ${showPackagePrice ? `<small>عدد العبوة: ${p.packageCount} وحدة</small><br>` : ""}
-            <small>الكمية: ${p.stockUnits} وحدة</small><br>
-            <small>الوسوم: ${p.tags?.join(", ") || "—"}</small>
+      li.className = "compact-product-card";
+
+      const summaryText = `
+        <div class="product-summary">
+          <img src="${p.image || ""}" alt="${String(p.name || "منتج")}" class="product-thumb">
+          <div class="product-summary-text">
+            <strong>${p.name}</strong>
+            <small>${p.companyName || "—"}</small>
+            <small>${p.category || "—"}</small>
+            <small>${p.pricePerUnit} / ${p.stockUnits} وحدة</small>
           </div>
-        </div>`;
+        </div>
+      `;
+
+      const extraText = `
+        <div class="product-extra">
+          <small>المعرف: ${id}</small>
+          <small>السعر للوحدة: ${p.pricePerUnit} | السعر للوحدة جملة: ${p.pricePerUnitForShops}</small>
+          ${showPackagePrice ? `<small>السعر للعبوة: ${p.pricePerPackage} | السعر للعبوة جملة: ${p.priceOfPackageForShops}</small>` : ""}
+          <small>التكلفة: ${p.cost}</small>
+          ${showPackagePrice ? `<small>عدد العبوة: ${p.packageCount} وحدة</small>` : ""}
+          <small>الكمية: ${p.stockUnits} وحدة</small>
+          <small>الوسوم: ${p.tags?.join(", ") || "—"}</small>
+        </div>
+      `;
+
+      li.innerHTML = `
+        ${summaryText}
+        <button class="product-toggle" type="button">عرض التفاصيل</button>
+        ${extraText}
+      `;
+
+      const toggleBtn = li.querySelector(".product-toggle");
+      toggleBtn.addEventListener("click", () => {
+        li.classList.toggle("expanded");
+        toggleBtn.textContent = li.classList.contains("expanded") ? "إخفاء التفاصيل" : "عرض التفاصيل";
+      });
+
       elements.productList.appendChild(li);
     }
   });
